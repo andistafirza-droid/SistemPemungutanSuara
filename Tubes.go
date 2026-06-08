@@ -6,7 +6,6 @@ import (
 
 // +++ APLIKASI SISTEM PEMUNGUTAN SUARA DIGITAL +++
 
-// deklarasi array global (@jebb_24)
 var nama [100]string
 var visiMisi [100]string
 var nomorUrut [100]int
@@ -14,10 +13,7 @@ var suara [100]int
 
 var jumlahKandidat int
 
-// procedure tambah kandidat (@jebb_24)
 func tambahKandidat() {
-
-	// melakukan input data kandidat (gabriel edbert)
 
 	fmt.Print("\nJumlah kandidat yang ingin ditambahkan: ")
 	fmt.Scan(&jumlahKandidat)
@@ -39,10 +35,14 @@ func tambahKandidat() {
 	}
 }
 
-// procedure tampil kandidat
 func tampilKandidat() {
 
 	fmt.Println("\n=== DATA KANDIDAT ===")
+
+	if jumlahKandidat == 0 {
+		fmt.Println("Belum ada data kandidat.")
+		return
+	}
 
 	for eel := 0; eel < jumlahKandidat; eel++ {
 
@@ -54,7 +54,75 @@ func tampilKandidat() {
 	}
 }
 
-// procedure voting
+func updateKandidat() {
+
+	var cari int
+	ketemu := false
+
+	fmt.Print("\nMasukkan nomor urut kandidat yang ingin diedit: ")
+	fmt.Scan(&cari)
+
+	for eel := 0; eel < jumlahKandidat; eel++ {
+
+		if nomorUrut[eel] == cari {
+
+			fmt.Println("\nData ditemukan!")
+
+			fmt.Print("Nama Baru       : ")
+			fmt.Scan(&nama[eel])
+
+			fmt.Print("Nomor Urut Baru : ")
+			fmt.Scan(&nomorUrut[eel])
+
+			fmt.Print("Visi Misi Baru  : ")
+			fmt.Scan(&visiMisi[eel])
+
+			fmt.Println("Data berhasil diperbarui!")
+
+			ketemu = true
+			break
+		}
+	}
+
+	if !ketemu {
+		fmt.Println("Data tidak ditemukan!")
+	}
+}
+
+func deleteKandidat() {
+
+	var cari int
+	ketemu := false
+
+	fmt.Print("\nMasukkan nomor urut kandidat yang ingin dihapus: ")
+	fmt.Scan(&cari)
+
+	for eel := 0; eel < jumlahKandidat; eel++ {
+
+		if nomorUrut[eel] == cari {
+
+			for j := eel; j < jumlahKandidat-1; j++ {
+
+				nama[j] = nama[j+1]
+				nomorUrut[j] = nomorUrut[j+1]
+				visiMisi[j] = visiMisi[j+1]
+				suara[j] = suara[j+1]
+			}
+
+			jumlahKandidat--
+
+			fmt.Println("Data berhasil dihapus!")
+
+			ketemu = true
+			break
+		}
+	}
+
+	if !ketemu {
+		fmt.Println("Data tidak ditemukan!")
+	}
+}
+
 func voting() {
 
 	var pilih int
@@ -74,7 +142,6 @@ func voting() {
 
 		ditemukan := false
 
-		// sequential pencarian kandidat (gabriel edbert)
 		for eel := 0; eel < jumlahKandidat; eel++ {
 
 			if pilih == nomorUrut[eel] {
@@ -86,7 +153,6 @@ func voting() {
 			}
 		}
 
-		// percabangan validasi data (gabriel edbert)
 		if !ditemukan {
 
 			fmt.Println("Nomor kandidat tidak ditemukan!")
@@ -102,7 +168,6 @@ func voting() {
 	}
 }
 
-// function total suara
 func totalSuara() int {
 
 	total := 0
@@ -115,7 +180,6 @@ func totalSuara() int {
 	return total
 }
 
-// procedure statistik suara
 func statistik() {
 
 	total := totalSuara()
@@ -140,7 +204,6 @@ func statistik() {
 	fmt.Println("Total Suara Masuk:", total)
 }
 
-// sequential search
 func sequentialSearch() {
 
 	var cari int
@@ -149,7 +212,6 @@ func sequentialSearch() {
 	fmt.Print("\nMasukkan nomor urut yang dicari: ")
 	fmt.Scan(&cari)
 
-	// pencarian sequential search (gabriel edbert)
 	for eel := 0; eel < jumlahKandidat; eel++ {
 
 		if nomorUrut[eel] == cari {
@@ -169,7 +231,6 @@ func sequentialSearch() {
 	}
 }
 
-// binary search
 func binarySearch() {
 
 	var cari int
@@ -181,7 +242,6 @@ func binarySearch() {
 	high := jumlahKandidat - 1
 	ketemu := false
 
-	// proses binary search (gabriel edbert)
 	for low <= high {
 
 		mid := (low + high) / 2
@@ -212,10 +272,8 @@ func binarySearch() {
 	}
 }
 
-// selection sort berdasarkan suara terbanyak
 func selectionSort() {
 
-	// proses selection sort (gabriel edbert)
 	for eel := 0; eel < jumlahKandidat-1; eel++ {
 
 		max := eel
@@ -237,10 +295,8 @@ func selectionSort() {
 	fmt.Println("\nData berhasil diurutkan berdasarkan suara terbanyak!")
 }
 
-// insertion sort berdasarkan nomor urut
 func insertionSort() {
 
-	// proses insertion sort (gabriel edbert)
 	for eel := 1; eel < jumlahKandidat; eel++ {
 
 		keyNomor := nomorUrut[eel]
@@ -276,7 +332,6 @@ func main() {
 	for {
 
 		fmt.Println("\n+++ APLIKASI SISTEM PEMUNGUTAN SUARA DIGITAL +++")
-
 		fmt.Println("1. Tambah Kandidat")
 		fmt.Println("2. Tampilkan Kandidat")
 		fmt.Println("3. Voting")
@@ -285,12 +340,13 @@ func main() {
 		fmt.Println("6. Binary Search")
 		fmt.Println("7. Selection Sort (Suara)")
 		fmt.Println("8. Insertion Sort (Nomor Urut)")
-		fmt.Println("9. Keluar")
+		fmt.Println("9. Edit Kandidat")
+		fmt.Println("10. Hapus Kandidat")
+		fmt.Println("11. Keluar")
 
 		fmt.Print("Pilih menu: ")
 		fmt.Scan(&pilihan)
 
-		// percabangan menu program (gabriel edbert)
 		switch pilihan {
 
 		case 1:
@@ -318,6 +374,12 @@ func main() {
 			insertionSort()
 
 		case 9:
+			updateKandidat()
+
+		case 10:
+			deleteKandidat()
+
+		case 11:
 			fmt.Println("Program selesai.")
 			return
 
